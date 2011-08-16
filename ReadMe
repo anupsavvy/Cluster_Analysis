@@ -1,0 +1,49 @@
+Intuition : "A query can be treated as a center or mean of a random cluster. Perspective is to have a search engine which returns results that lie around the query (center of that random cluster). If our search has improved, then query vector should be closer to the mean of cluster of search results returned by Release 1.3, than the counterpart mean of Release 1.2.1 respectively. "
+
+Expectation: "Results from Release 1.3 should be tightly clustered and have their mean vector close to query vector."
+
+Approach :
+
+1) Install Release 1.2.1 and 1.3 
+2) Load scripps on both instances
+3) run same search query on both instances
+4) Generate text files of first 10 search results from both the instances.
+5) Make a combined dictionary of total words appear in both search results ( on 1.2.1 and 1.3).
+6) Parse all text files generated in step 4. 
+7) Form sample vector for each file using "Bag of words" theory. (Ref: http://en.wikipedia.org/wiki/Bag_of_words_model_in_computer_vision ).
+8) Form query vector ( call it Q).
+9) Normalize all vectors.
+10) Treat results from Release 1.2.1 ( corresponding vectors) as a part of one cluster and derive its mean vector ( call it M1).
+11) Treat results from Release 1.3 ( corresponding vectors) as a part of another cluster and derive its mean vector ( call it M2).
+12) Use some distance measure and Calculate Q - M1 & Q - M2
+
+Successful search improvement if : (Q - M1) > (Q-M2) in most of the cases.
+
+Program code present at: https://github.com/anupsavvy/Cluster_Analysis
+
+Clases Present:
+
+Cluster_Analysis.java : Main class. 
+CreateVectors.java: Class that creates dictionary and forms vectors.
+ClusterStats.java: Class that normalizes vectors, derives means and calculates distance.
+
+Log files:
+
+logs/clusteranalysis.log : You can see the debug, info and error output in this log file and on console.
+
+Libraries used : 
+
+lib/jama-1.0.2.jar 
+lib/log4j-1.2.16.jar 
+
+Properties files:
+
+properties/clusterAnalysis.properties - You can configure path of text files, number of samples in both the clusters and query ( same text that you put in search box).
+
+Files:
+
+files/oldsamples : all text files from Release 1.2.1 
+files/samples: all text files from Release 1.3
+files/dictionary.txt: You can see all terms present in the dictionary
+files/mean1.txt: dimension values for mean vector of cluster of Release 1.2.1
+files/mean2.txt: dimension values for mean vector of cluster of Release 1.3
